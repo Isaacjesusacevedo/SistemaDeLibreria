@@ -1,0 +1,26 @@
+﻿@page
+@model SistemaAcademico.Pages.Libros.DeleteModel
+@{
+}
+<input type="hidden" asp-for="Libro.Id" />
+
+<form method="post">
+	<h4>Eliminaras este libro:</h4>
+
+	<div>
+		<strong>Titulo:</strong> @Model.Libro.Title
+	</div>
+	<div>
+		<strong>Autor:</strong> @Model.AutorMap.GetValueOrDefault(int.TryParse(Model.Libro.Autor, out var id) ? id : -1)?.Name
+	</div>
+	<div>
+		<strong>Año:</strong> @Model.Libro.Year
+	</div>
+	<div>
+		<strong>Generos:</strong> @Model.Libro.Genders
+	</div>
+	
+	<br />
+	<button type="submit" class="btn btn-danger">Eliminar</button>
+	<a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+</form>

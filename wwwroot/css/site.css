@@ -1,0 +1,77 @@
+/* =========================
+   CONFIGURACIÓN GENERAL
+========================= */
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+/* Focus Bootstrap */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* =========================
+   TEMA OSCURO (GLOBAL)
+========================= */
+
+body.dark {
+    background-color: #121212;
+    color: #eaeaea;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+/* Modo claro */
+body:not(.dark) .navbar {
+    background-color: #ffffff !important;
+}
+
+body:not(.dark) .navbar-brand,
+body:not(.dark) .nav-link {
+    color: #000000 !important;
+}
+
+/* Modo oscuro */
+body.dark .navbar {
+    background-color: #1e1e1e !important;
+}
+
+body.dark .navbar-brand,
+body.dark .nav-link {
+    color: #eaeaea !important;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+/* Modo claro */
+body:not(.dark) .footer {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Modo oscuro */
+body.dark .footer {
+    background-color: #1e1e1e;
+    color: #aaaaaa;
+}

@@ -1,0 +1,121 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    /* ===== FONDO GENERAL ===== */
+    body:not(.dark) {
+        background-image: url('/img/libreria.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    body.dark {
+        background-image: none;
+        background-color: #121212;
+    }
+
+    /* ===== CONTENEDOR ===== */
+    .page-wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        padding: 40px 20px;
+    }
+
+    /* ===== BIENVENIDA ===== */
+    .bienvenida-container {
+        background-color: rgba(0, 0, 0, 0.82);
+        padding: 30px 40px;
+        border-radius: 16px;
+        max-width: 700px;
+        text-align: center;
+    }
+
+    .bienvenida-titulo {
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+        color: #ffffff;
+        margin-top: 0;
+    }
+
+    .bienvenida-subtitulo {
+        font-size: clamp(1.2rem, 3vw, 1.6rem);
+        color: #e6d48a;
+        margin-bottom: 0;
+    }
+
+    /* ===== GRID LIBROS ===== */
+    .libros-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 24px;
+        width: 100%;
+        max-width: 1100px;
+    }
+
+    /* ===== CARD LIBRO ===== */
+    .libro-card {
+        border-radius: 14px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    body:not(.dark) .libro-card {
+        background-color: rgba(0, 0, 0, 0.75);
+        color: white;
+    }
+
+    body.dark .libro-card {
+        background-color: #1e1e1e;
+        color: #eaeaea;
+    }
+
+    .libro-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .libro-titulo {
+        font-size: 1.2rem;
+        margin: 0 0 10px;
+        color: #e6d48a;
+    }
+
+    .libro-info {
+        font-size: 0.95rem;
+        opacity: 0.9;
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <div class="bienvenida-container">
+        <h1 class="bienvenida-titulo">Bienvenido</h1>
+        <p class="bienvenida-subtitulo">
+            Lee y conoce los clásicos de la ciencia ficción
+        </p>
+    </div>
+
+    <div class="libros-grid">
+        @foreach (var libro in Model.Libros)
+        {
+            <div class="libro-card">
+                <h3 class="libro-titulo">@libro.Title</h3>
+                <p class="libro-info">Año: @libro.Year</p>
+                <p class="libro-info">
+                    Autor: @Model.ObtenerNombreAutor(libro.Autor)
+                </p>
+                <p class="libro-info">Género: @libro.Genders</p>
+            </div>
+        }
+    </div>
+
+</div>

@@ -1,0 +1,135 @@
+﻿using SistemaAcademico.AccesoDatos;
+using SistemaAcademico.Models;
+
+namespace SistemaAcademico.Repositorio
+{
+    public class RepositorioCrudJson<T> : IRepositorio<T> where T : class
+    {
+        private readonly IAccesoDatos<T> _acceso;
+        public RepositorioCrudJson(IAccesoDatos<T> acceso)
+        {
+            _acceso = acceso;
+        }
+
+
+
+        public T? BuscarPorIdAutor(int autorId)
+        {
+            var lista = ObtenerDatos();
+            var propiedadAutor = typeof(T).GetProperty("Autor");
+
+            if (propiedadAutor == null)
+                return null; // si T no tiene Autor, devolver null
+
+            foreach (var item in lista)
+            {
+                int valorAutor = (int)propiedadAutor.GetValue(item);
+                if (valorAutor == autorId)
+                {
+                    return item; // devuelve uno solo
+                }
+            }
+
+            return null;
+        }
+
+
+        public List<T> ObtenerDatos()
+        {
+            return _acceso.Leer();
+        }
+        public void Guardar(List<T> lista)
+        {
+            _acceso.Guardar(lista);
+        }
+
+        //Metodos con reflexion
+        public int ObtenerNuevoId(List<T> lista)
+        {
+            int maxId = 0;
+            foreach (var item in lista)
+            {
+                var propiedadId = typeof(T).GetProperty("Id");
+                int id = (int)propiedadId.GetValue(item);
+
+                if (id > maxId)
+                {
+                    maxId = id;
+                }
+            }
+            return maxId + 1;
+        }
+
+        public void Agregar(T entidad)
+        {
+            var lista = ObtenerDatos();
+            int nuevoId = ObtenerNuevoId(lista);
+
+            var propiedadId = typeof(T).GetProperty("Id");
+            propiedadId.SetValue(entidad, nuevoId);
+
+            lista.Add(entidad);
+            Guardar(lista);
+        }
+
+        private T? BuscarEnListaPorId(List<T> lista, int id)
+        {
+            var propiedadId = typeof(T).GetProperty("Id");
+
+            foreach (var item in lista)
+            {
+                int valorId = (int)propiedadId?.GetValue(item);
+                if (valorId == id)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+        public T BuscarPorId(int id)
+        {
+            var lista = ObtenerDatos();
+            return BuscarEnListaPorId(lista, id);
+        }
+
+
+        public void EliminarPorId(int id)
+        {
+            var lista = ObtenerDatos();
+            T? entidad = BuscarEnListaPorId(lista, id);
+
+            if (entidad != null)
+            {
+                lista.Remove(entidad);
+                Guardar(lista);
+            }
+
+        }
+        public void Editar(T entidadNueva)
+        {
+            var lista = ObtenerDatos();
+            var propiedadId = typeof(T).GetProperty("Id");
+            int id = (int)propiedadId.GetValue(entidadNueva);
+
+            var entidadExistente = BuscarEnListaPorId(lista, id);
+
+            if (entidadExistente != null)
+            {
+                ActualizarPropiedades(entidadExistente, entidadNueva);
+                Guardar(lista);
+            }
+        }
+        private void ActualizarPropiedades(T entidadExistente, T entidadNueva)
+        {
+            var propiedades = typeof(T).GetProperties();
+
+            foreach (var propiedad in propiedades)
+            {
+                if (propiedad.Name == "Id") continue;
+
+                var nuevoValor = propiedad.GetValue(entidadNueva);
+                propiedad.SetValue(entidadExistente, nuevoValor);
+            }
+        }
+    }
+}
